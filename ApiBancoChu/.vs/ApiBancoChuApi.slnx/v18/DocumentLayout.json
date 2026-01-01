@@ -1,12 +1,12 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\",
+  "WorkspaceRootPath": "C:\\Users\\rafael.risso\\source\\repos\\apiBank\\ApiBancoChu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{90191AFA-E1D8-43C8-99DD-CB3F568307E9}|..\\BancoChu.Application\\BancoChu.Application.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\bancochu.application\\usersapplication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\UsersApplication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\apibancochu\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|c:\\users\\rafael.risso\\source\\repos\\apibank\\apibancochu\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -24,10 +24,10 @@
               "DocumentIndex": 0,
               "Title": "UsersApplication.cs",
               "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
-              "RelativeDocumentMoniker": "..\\BancoChu.Application\\UsersApplication.cs",
+              "RelativeDocumentMoniker": "..\\..\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
               "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
-              "RelativeToolTip": "..\\BancoChu.Application\\UsersApplication.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAIA2wBsAAAAqAAAAAAAAAA==",
+              "RelativeToolTip": "..\\..\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAWwBsAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-01T14:55:35.976Z",
               "EditorCaption": ""
@@ -36,14 +36,13 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "UsersController.cs",
-              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\apiBank\\ApiBancoChu\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
-              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\apiBank\\ApiBancoChu\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Controllers\\UsersController.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABoAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T15:45:22.626Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-01T15:45:22.626Z"
             }
           ]
         }

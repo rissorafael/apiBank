@@ -3,22 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{90191AFA-E1D8-43C8-99DD-CB3F568307E9}|..\\BancoChu.Application\\BancoChu.Application.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\bancochu.application\\dtos\\accounts\\createaccountsrequestvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{90191AFA-E1D8-43C8-99DD-CB3F568307E9}|..\\BancoChu.Application\\BancoChu.Application.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\bancochu.application\\dtos\\auth\\loginrequestvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\apibancochu\\controllers\\accountscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|solutionrelative:controllers\\accountscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{90191AFA-E1D8-43C8-99DD-CB3F568307E9}|..\\BancoChu.Application\\BancoChu.Application.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\bancochu.application\\usersapplication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\apibancochu\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|c:\\users\\rafael.risso\\source\\repos\\apibanco\\apibancochu\\controllers\\authcontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0AA9D300-CDAA-EEA2-029C-F689B61E1681}|BancoChuApi.csproj|solutionrelative:controllers\\authcontroller .cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -28,71 +17,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "LoginRequestValidator.cs",
-              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\Dtos\\Auth\\LoginRequestValidator.cs",
-              "RelativeDocumentMoniker": "..\\BancoChu.Application\\Dtos\\Auth\\LoginRequestValidator.cs",
-              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\Dtos\\Auth\\LoginRequestValidator.cs",
-              "RelativeToolTip": "..\\BancoChu.Application\\Dtos\\Auth\\LoginRequestValidator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T14:55:35.993Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "CreateAccountsRequestValidator.cs",
-              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\Dtos\\Accounts\\CreateAccountsRequestValidator.cs",
-              "RelativeDocumentMoniker": "..\\BancoChu.Application\\Dtos\\Accounts\\CreateAccountsRequestValidator.cs",
-              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\Dtos\\Accounts\\CreateAccountsRequestValidator.cs",
-              "RelativeToolTip": "..\\BancoChu.Application\\Dtos\\Accounts\\CreateAccountsRequestValidator.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAABcAAAAAAAAAA==",
+              "Title": "UsersApplication.cs",
+              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
+              "RelativeDocumentMoniker": "..\\BancoChu.Application\\UsersApplication.cs",
+              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\BancoChu.Application\\UsersApplication.cs",
+              "RelativeToolTip": "..\\BancoChu.Application\\UsersApplication.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAIA2wBsAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T15:38:09.41Z",
+              "WhenOpened": "2026-01-01T14:55:35.976Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AccountsController.cs",
-              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\AccountsController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AccountsController.cs",
-              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\AccountsController.cs",
-              "RelativeToolTip": "Controllers\\AccountsController.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAxwB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T14:44:24.963Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\UsersController.cs",
               "RelativeToolTip": "Controllers\\UsersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAABIAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABoAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T14:37:47.89Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "AuthController .cs",
-              "DocumentMoniker": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\AuthController .cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController .cs",
-              "ToolTip": "C:\\Users\\rafael.risso\\source\\repos\\ApiBanco\\ApiBancoChu\\Controllers\\AuthController .cs",
-              "RelativeToolTip": "Controllers\\AuthController .cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBMAAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T04:02:31.076Z",
+              "WhenOpened": "2026-01-01T15:45:22.626Z",
               "EditorCaption": ""
             }
           ]

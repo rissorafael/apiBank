@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Application/">
+    <Project Path="BancoChu.Application/BancoChu.Application.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="BancoChu.Domain/BancoChu.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infra/">
+    <Project Path="ApiBancoChu.Infrastructure/BancoChu.Infrastructure.csproj" />
+    <Project Path="BancoChu.Infra.IoC/BancoChu.Infra.IoC.csproj" />
+  </Folder>
+  <Project Path="ApiBancoChu/BancoChuApi.csproj" />
+</Solution>
