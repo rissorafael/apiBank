@@ -6,8 +6,8 @@
     <Project Path="BancoChu.Domain/BancoChu.Domain.csproj" />
   </Folder>
   <Folder Name="/Infra/">
-    <Project Path="ApiBancoChu.Infrastructure/BancoChu.Infrastructure.csproj" />
     <Project Path="BancoChu.Infra.IoC/BancoChu.Infra.IoC.csproj" />
+    <Project Path="BancoChu.Infrastructure/BancoChu.Infrastructure.csproj" />
   </Folder>
-  <Project Path="ApiBancoChu/BancoChuApi.csproj" />
+  <Project Path="BancoChuApi/BancoChuApi.csproj" />
 </Solution>

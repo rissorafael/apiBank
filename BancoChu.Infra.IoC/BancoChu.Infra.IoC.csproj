@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiBancoChu.Infrastructure\BancoChu.Infrastructure.csproj" />
     <ProjectReference Include="..\BancoChu.Application\BancoChu.Application.csproj" />
     <ProjectReference Include="..\BancoChu.Domain\BancoChu.Domain.csproj" />
+    <ProjectReference Include="..\BancoChu.Infrastructure\BancoChu.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
