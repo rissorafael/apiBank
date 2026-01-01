@@ -1,0 +1,39 @@
+# Visual Studio / .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Publish / build outputs
+publish/
+*.dll
+*.exe
+
+# Logs, temp, cache
+*.log
+*.cache
+*.tmp
+
+# IDEs
+.idea/
+.vscode/
+
+# Configurações locais e segredos
+appsettings.Local.json
+appsettings.*.Local.json
+local.settings.json
+launchSettings.json
+.env
+.local.env
+
+# Packages / node
+packages/
+*.nupkg
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
