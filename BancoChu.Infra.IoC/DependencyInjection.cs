@@ -12,7 +12,6 @@ namespace BancoChu.Infra.IoC
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IBrasilApiApplication, BrasilApiApplication>();
             services.AddScoped<IBrasilApiService, BrasilApiService>();
             services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IAccountsApplication, AccountsApplication>();
