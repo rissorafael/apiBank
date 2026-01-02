@@ -16,10 +16,11 @@ namespace BancoChu.Infra.IoC
             services.AddScoped<IBrasilApiService, BrasilApiService>();
             services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IAccountsApplication, AccountsApplication>();
-            services.AddScoped<IBankAccountRepository, Infrastructure.Repositories.BankAccountRepository>();
+            services.AddScoped<IAccountsRepository, Infrastructure.Repositories.AccountsRepository>();
             services.AddScoped<IAuthApplication, AuthApplication>();
             services.AddScoped<IUserRepository, Infrastructure.Repositories.UserRepository>();
             services.AddScoped<IUsersApplication, UsersApplication>();
+            services.AddScoped<IBankTransferRepository, Infrastructure.Repositories.BankTransferRepository>();
         }
     }
 }

@@ -5,11 +5,11 @@ using Dapper;
 
 namespace BancoChu.Infrastructure.Repositories
 {
-    public class BankAccountRepository : IBankAccountRepository
+    public class AccountsRepository : IAccountsRepository
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public BankAccountRepository(IDbConnectionFactory connectionFactory)
+        public AccountsRepository(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
@@ -53,5 +53,44 @@ namespace BancoChu.Infrastructure.Repositories
                 CreatedAt = account.CreatedAt
             });
         }
+
+        public async Task<BankAccount?> GetByIdAsync(Guid accountId)
+        {
+            const string sql = @"
+                          SELECT
+                              id,
+                              balance,
+                              status
+                          FROM bank_accounts
+                          WHERE id = @accountId;";
+
+            using var connection = _connectionFactory.CreateConnection();
+            var result = await connection.QueryFirstOrDefaultAsync<BankAccount>(sql,
+                new { accountId });
+
+            return result;
+        }
+
+
+        public async Task UpdateBalanceAsync(Guid accountId, decimal newBalance)
+        {
+            const string sql = @"UPDATE bank_accounts
+                                    SET balance = @Balance  
+                                    WHERE id = @AccountId;";
+
+            using var connection = _connectionFactory.CreateConnection();
+
+            var rows = await connection.ExecuteAsync(
+                sql,
+                new
+                {
+                    AccountId = accountId,
+                    Balance = newBalance
+                }
+            );
+            if (rows == 0)
+                throw new InvalidOperationException("Conta não encontrada.");
+        }
     }
 }
+

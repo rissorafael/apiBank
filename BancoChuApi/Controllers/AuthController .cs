@@ -16,14 +16,35 @@ namespace BancoChuApi.Controllers
             _authApplication = authApplication;
         }
 
+        /// <summary>
+        /// Realiza a autenticação do usuário.
+        /// </summary>
+        /// <remarks>
+        /// Endpoint responsável por validar as credenciais do usuário
+        /// e retornar um token JWT em caso de sucesso.
+        /// </remarks>
+        /// <param name="request">Dados de login (email e senha).</param>
+        /// <response code="200">Usuário autenticado com sucesso.</response>
+        /// <response code="400">Dados inválidos.</response>
+        /// <response code="401">Credenciais inválidas.</response>
+        /// <response code="500">Erro interno do servidor.</response>
         [HttpPost("login")]
         [AllowAnonymous]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto request)
         {
             var result = await _authApplication.LoginAsync(request);
+           
+            if (result is null)
+                return Unauthorized(new ProblemDetails
+                {
+                    Title = "Credenciais inválidas",
+                    Status = StatusCodes.Status401Unauthorized
+                });
 
             return Ok(result);
         }
