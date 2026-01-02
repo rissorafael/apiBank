@@ -5,6 +5,6 @@ namespace BancoChu.Application.Interfaces
 {
     public interface IBrasilApiApplication
     {
-        Task<List<HolidayDto>> GetHolidayAsync();
+        Task<List<HolidayDto>> GetHolidayAsync(int year);
     }
 }

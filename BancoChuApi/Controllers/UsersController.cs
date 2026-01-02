@@ -18,6 +18,21 @@ namespace BancoChuApi.Controllers
             _usersApplication = usersApplication;
         }
 
+        /// <summary>
+        /// Cria um novo usuário no sistema.
+        /// </summary>
+        /// <param name="request">
+        /// Dados necessários para criar um novo usuário, incluindo nome, email, senha e outros campos obrigatórios.
+        /// </param>
+        /// <returns>
+        /// Retorna os dados do usuário criado.
+        /// </returns>
+        /// <response code="200">
+        /// Usuário criado com sucesso.
+        /// </response>
+        /// <response code="500">
+        /// Erro interno ao criar o usuário.
+        /// </response>
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]

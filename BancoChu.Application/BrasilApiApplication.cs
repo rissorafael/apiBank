@@ -13,9 +13,9 @@ namespace BancoChu.Application
             _brasilApiService = brasilApiService;
         }
 
-        public async Task<List<HolidayDto>> GetHolidayAsync()
+        public async Task<List<HolidayDto>> GetHolidayAsync(int year)
         {
-            return await _brasilApiService.GetHolidayAsync();
+            return await _brasilApiService.GetHolidayAsync(year);
         }
     }
 }

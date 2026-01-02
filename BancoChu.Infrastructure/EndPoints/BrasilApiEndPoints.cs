@@ -2,6 +2,6 @@
 {
     public static class BrasilApiEndPoints
     {
-        public const string Getferiados2025 = "feriados/v1/2025";
+        public const string Getferiados = "feriados/v1/";
     }
 }

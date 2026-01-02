@@ -83,6 +83,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+    options.InstanceName = "BancoChu:";
+});
+
 
 
 var app = builder.Build();

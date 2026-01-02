@@ -20,9 +20,9 @@ namespace ApiBancoChu.Infrastructure.ExternalServices
             _httpClient.BaseAddress = new Uri(_settings.Value.BaseUrl);
         }
 
-        public async Task<List<HolidayDto>> GetHolidayAsync()
+        public async Task<List<HolidayDto>> GetHolidayAsync(int year)
         {
-            var url = string.Format(BrasilApiEndPoints.Getferiados2025);
+            var url = string.Format(BrasilApiEndPoints.Getferiados, year);
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

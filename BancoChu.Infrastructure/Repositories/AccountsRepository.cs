@@ -3,7 +3,6 @@ using BancoChu.Domain.Interfaces;
 using Dapper;
 using System.Data;
 
-
 namespace BancoChu.Infrastructure.Repositories
 {
     public class AccountsRepository : IAccountsRepository

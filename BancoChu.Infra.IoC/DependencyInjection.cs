@@ -21,6 +21,7 @@ namespace BancoChu.Infra.IoC
             services.AddScoped<IUserRepository, Infrastructure.Repositories.UserRepository>();
             services.AddScoped<IUsersApplication, UsersApplication>();
             services.AddScoped<IBankTransferRepository, Infrastructure.Repositories.BankTransferRepository>();
+            services.AddScoped<IBusinessDayApplication, BusinessDayApplication>();
         }
     }
 }
