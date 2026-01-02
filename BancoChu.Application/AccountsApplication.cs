@@ -3,9 +3,6 @@ using BancoChu.Application.Interfaces;
 using BancoChu.Domain.Entities;
 using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
-using Microsoft.AspNetCore.Connections;
-using System.Data.Common;
-using System.Transactions;
 
 
 namespace BancoChu.Application

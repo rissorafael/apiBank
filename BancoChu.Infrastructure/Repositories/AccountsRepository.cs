@@ -2,7 +2,6 @@
 using BancoChu.Domain.Interfaces;
 using Dapper;
 using System.Data;
-using System.Transactions;
 
 
 namespace BancoChu.Infrastructure.Repositories
