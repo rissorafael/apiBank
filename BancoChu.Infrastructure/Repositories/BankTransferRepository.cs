@@ -17,10 +17,12 @@ namespace BancoChu.Infrastructure.Repositories
 
         public async Task<Guid> TransferAsync(BankTransfer transfer, IDbTransaction transaction)
         {
-            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
-            if (transaction.Connection == null) throw new ArgumentNullException(nameof(transaction.Connection));
+            try
+            {
+                if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+                if (transaction.Connection == null) throw new ArgumentNullException(nameof(transaction.Connection));
 
-            const string sql = @"
+                const string sql = @"
             INSERT INTO bank_transfers
             (
                 transfer_id,
@@ -42,9 +44,25 @@ namespace BancoChu.Infrastructure.Repositories
                 @Status
             );";
 
-            await transaction.Connection.ExecuteAsync(sql, transfer, transaction);
+                await transaction.Connection.ExecuteAsync(sql, new
+                {
+                    TransferId = transfer.Id,
+                    OriginAccountId = transfer.OriginAccountId,
+                    DestinationAccountId = transfer.DestinationAccountId,
+                    Amount = transfer.Amount,
+                    TransferDate = transfer.TransferDate,
+                    CreatedAt = transfer.CreatedAt,
+                    Status = transfer.Status.ToString()
+                }, transaction);
 
-            return transfer.Id;
+                return transfer.Id;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

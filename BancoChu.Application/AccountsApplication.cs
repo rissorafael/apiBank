@@ -55,7 +55,10 @@ namespace BancoChu.Application
             var newOriginBalance = originAccount.Balance - request.Amount;
             var newDestinationBalance = destinationAccount.Balance + request.Amount;
 
-            using var transaction = _connectionFactory.CreateConnection().BeginTransaction();
+            using var connection = _connectionFactory.CreateConnection();
+            connection.Open(); 
+            using var transaction = connection.BeginTransaction();
+          
             try
             {
                 var transfer = BankTransfer.Create(originAccount.Id, request.DestinationAccountId, request.Amount);
