@@ -3,6 +3,9 @@ using BancoChu.Application.Interfaces;
 using BancoChu.Domain.Entities;
 using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
+using Microsoft.AspNetCore.Connections;
+using System.Data.Common;
+using System.Transactions;
 
 
 namespace BancoChu.Application
@@ -11,10 +14,12 @@ namespace BancoChu.Application
     {
         private readonly IAccountsRepository _accountsRepository;
         private readonly IBankTransferRepository _bankTransferRepository;
-        public AccountsApplication(IAccountsRepository accountsRepository, IBankTransferRepository bankTransferRepository)
+        private readonly IDbConnectionFactory _connectionFactory;
+        public AccountsApplication(IAccountsRepository accountsRepository, IBankTransferRepository bankTransferRepository, IDbConnectionFactory connectionFactory)
         {
             _accountsRepository = accountsRepository;
             _bankTransferRepository = bankTransferRepository;
+            _connectionFactory = connectionFactory;
         }
         public async Task<Guid> CreateAsync(CreateAccountsRequestDto dto)
         {
@@ -33,6 +38,8 @@ namespace BancoChu.Application
 
         public async Task<Guid> TransferAsync(Guid accountId, TransferRequestDto request)
         {
+
+
             if (accountId == request.DestinationAccountId)
                 throw new ArgumentException("Conta de origem e destino não podem ser iguais.");
 
@@ -51,17 +58,34 @@ namespace BancoChu.Application
             var newOriginBalance = originAccount.Balance - request.Amount;
             var newDestinationBalance = destinationAccount.Balance + request.Amount;
 
-            await _accountsRepository.UpdateBalanceAsync(originAccount.Id, newOriginBalance);
+            using var transaction = _connectionFactory.CreateConnection().BeginTransaction();
+            try
+            {
+                var transfer = BankTransfer.Create(originAccount.Id, request.DestinationAccountId, request.Amount);
 
-            await _accountsRepository.UpdateBalanceAsync(destinationAccount.Id, newDestinationBalance);
+                await _accountsRepository.UpdateBalanceAsync(originAccount.Id, newOriginBalance, transaction);
 
-            var transfer = BankTransfer.Create(
-                                        accountId,
-                                        request.DestinationAccountId,
-                                        request.Amount);
+                await _accountsRepository.UpdateBalanceAsync(destinationAccount.Id, newDestinationBalance, transaction);
 
-            var transferId = await _bankTransferRepository.TransferAsync(transfer);
-            return transferId;
+                var transferId = await _bankTransferRepository.TransferAsync(transfer, transaction);
+
+                transaction.Commit();
+
+                return transferId;
+            }
+            catch (Exception)
+            {
+
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                if (transaction.Connection != null)
+                {
+                    transaction.Connection.Dispose();
+                }
+            }
         }
     }
 }

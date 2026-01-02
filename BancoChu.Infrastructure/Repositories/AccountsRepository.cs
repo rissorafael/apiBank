@@ -1,6 +1,8 @@
 ﻿using BancoChu.Domain.Entities;
 using BancoChu.Domain.Interfaces;
 using Dapper;
+using System.Data;
+using System.Transactions;
 
 
 namespace BancoChu.Infrastructure.Repositories
@@ -72,7 +74,7 @@ namespace BancoChu.Infrastructure.Repositories
         }
 
 
-        public async Task UpdateBalanceAsync(Guid accountId, decimal newBalance)
+        public async Task UpdateBalanceAsync(Guid accountId, decimal newBalance, IDbTransaction transaction)
         {
             const string sql = @"UPDATE bank_accounts
                                     SET balance = @Balance  
@@ -86,7 +88,8 @@ namespace BancoChu.Infrastructure.Repositories
                 {
                     AccountId = accountId,
                     Balance = newBalance
-                }
+                }, 
+                transaction
             );
             if (rows == 0)
                 throw new InvalidOperationException("Conta não encontrada.");

@@ -1,6 +1,7 @@
 ﻿using BancoChu.Domain.Entities;
 using BancoChu.Domain.Interfaces;
 using Dapper;
+using System.Data;
 
 
 namespace BancoChu.Infrastructure.Repositories
@@ -14,8 +15,11 @@ namespace BancoChu.Infrastructure.Repositories
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<Guid> TransferAsync(BankTransfer transfer)
+        public async Task<Guid> TransferAsync(BankTransfer transfer, IDbTransaction transaction)
         {
+            if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+            if (transaction.Connection == null) throw new ArgumentNullException(nameof(transaction.Connection));
+
             const string sql = @"
             INSERT INTO bank_transfers
             (
@@ -36,28 +40,11 @@ namespace BancoChu.Infrastructure.Repositories
                 @TransferDate,
                 @CreatedAt,
                 @Status
-            );
-        ";
+            );";
 
-            using var connection = _connectionFactory.CreateConnection();
-            using var transaction = connection.BeginTransaction();
+            await transaction.Connection.ExecuteAsync(sql, transfer, transaction);
 
-            try
-            {
-                await connection.ExecuteAsync(
-                    sql,
-                    transfer,
-                    transaction
-                );
-
-                transaction.Commit();
-                return transfer.Id;
-            }
-            catch
-            {
-                transaction.Rollback();
-                throw;
-            }
+            return transfer.Id;
         }
     }
 }

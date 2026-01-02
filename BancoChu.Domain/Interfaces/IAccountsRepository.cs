@@ -1,5 +1,6 @@
 ﻿
 using BancoChu.Domain.Entities;
+using System.Data;
 
 namespace BancoChu.Domain.Interfaces
 {
@@ -7,6 +8,6 @@ namespace BancoChu.Domain.Interfaces
     {
         Task AddAsync(BankAccount account);
         Task<BankAccount?> GetByIdAsync(Guid accountId);
-        Task UpdateBalanceAsync(Guid accountId, decimal newBalance);
+        Task UpdateBalanceAsync(Guid accountId, decimal newBalance, IDbTransaction transaction);
     }
 }
