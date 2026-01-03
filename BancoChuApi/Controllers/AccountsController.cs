@@ -75,7 +75,7 @@ namespace BancoChuApi.Controllers
             try
             {
                 var transferId = await _accountsApplication.TransferAsync(accountId, request);
-                
+
                 return Created(string.Empty, new
                 {
                     transferId,
@@ -104,6 +104,56 @@ namespace BancoChuApi.Controllers
                 );
             }
         }
+
+        /// <summary>
+        /// Obtém o extrato bancário de uma conta em um determinado período.
+        /// </summary>
+        /// <param name="accountId">
+        /// Identificador da conta bancária.
+        /// </param>
+        /// <param name="startDate">
+        /// Data inicial do período do extrato (inclusive).
+        /// </param>
+        /// <param name="endDate">
+        /// Data final do período do extrato (inclusive).
+        /// </param>
+        /// <returns>
+        /// Retorna a lista de movimentações (créditos e débitos) da conta no período informado.
+        /// </returns>
+        /// <response code="200">
+        /// Extrato retornado com sucesso.
+        /// </response>
+        /// <response code="400">
+        /// A data inicial é maior que a data final.
+        /// </response>
+        /// <response code="404">
+        /// Conta não encontrada.
+        /// </response>
+        /// <response code="500">
+        /// Erro interno ao processar a solicitação.
+        /// </response>
+        [HttpGet("{accountId}/statement")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetStatementAsync([FromRoute] Guid accountId,
+                                                           [FromQuery] DateTime startDate,
+                                                           [FromQuery] DateTime endDate)
+
+        {
+            if (startDate > endDate)
+                return BadRequest("A data inicial não pode ser maior que a data final.");
+
+            var start = startDate.Date;
+            var end = endDate.Date.AddDays(1);
+
+
+            var statement = await _accountsApplication.GetStatementAsync(accountId, start, end);
+            return Ok(statement);
+        }
+
     }
 }
 

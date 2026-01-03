@@ -64,6 +64,37 @@ namespace BancoChu.Infrastructure.Repositories
                 throw ex;
             }
         }
+
+        public async Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid accountId, DateTime startDate, DateTime endDate)
+        {
+            const string sql = @"
+                       SELECT
+                           transfer_id       AS Id,
+                           origin_account_id AS OriginAccountId,
+                           destination_account_id AS DestinationAccountId,
+                           amount            AS Amount,
+                           transfer_date     AS TransferDate,
+                           status            AS Status,
+                           created_at        AS CreatedAt
+                       FROM bank_transfers
+                       WHERE
+                           (origin_account_id = @AccountId
+                            OR destination_account_id = @AccountId)
+                         AND transfer_date >= @StartDate
+                         AND transfer_date <= @EndDate
+                       ORDER BY transfer_date ASC;";
+
+
+            using var connection = _connectionFactory.CreateConnection();
+
+            return await connection.QueryAsync<BankTransfer>(sql, new
+            {
+                AccountId = accountId,
+                StartDate = startDate,
+                EndDate = endDate
+            });
+        }
+
     }
 }
 

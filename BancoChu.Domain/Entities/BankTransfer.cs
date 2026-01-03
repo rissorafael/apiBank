@@ -7,7 +7,7 @@ namespace BancoChu.Domain.Entities
         public Guid Id { get; private set; }
         public Guid OriginAccountId { get; private set; }
         public Guid DestinationAccountId { get; private set; }
-        public decimal Amount { get; private set; }
+        public decimal Amount { get; set; }
         public DateTime TransferDate { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public TransferStatus Status { get; private set; }

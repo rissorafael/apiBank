@@ -95,5 +95,21 @@ namespace BancoChu.Application
                 }
             }
         }
+
+        public async Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid accountId, DateTime startDate, DateTime endDate)
+        {
+            var statements = await _bankTransferRepository.GetStatementAsync(accountId, startDate, endDate);
+
+
+            foreach (var item in statements)
+            {
+                if (item.OriginAccountId == accountId)
+                {
+                    item.Amount = -item.Amount;
+                }
+            }
+
+            return statements;
+        }
     }
 }

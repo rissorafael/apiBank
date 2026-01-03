@@ -34,6 +34,7 @@ namespace BancoChuApi.Controllers
         /// Erro interno ao criar o usuário.
         /// </response>
         [HttpPost]
+        [AllowAnonymous]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
