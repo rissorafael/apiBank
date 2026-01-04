@@ -22,6 +22,14 @@ namespace BancoChu.Application
         }
         public async Task<Guid> CreateAsync(CreateAccountsRequestDto dto)
         {
+
+            var alreadyExists = await _accountsRepository.ExistsByUserAndTypeAsync(dto.UserId, dto.Type);
+            if (alreadyExists)
+            {
+                throw new ArgumentException(
+                    $"O usuário já possui uma conta do tipo {dto.Type}.");
+            }
+
             var account = BankAccount.Create(
              dto.AccountNumber,
              dto.Agency,

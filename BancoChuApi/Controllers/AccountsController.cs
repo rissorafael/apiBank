@@ -39,10 +39,25 @@ namespace BancoChuApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync(CreateAccountsRequestDto request)
         {
-            var response = await _accountsApplication.CreateAsync(request);
-            // _logger.LogInformation($"Iniciando a consulta referente a seguinte lista de places:{JsonSerializer.Serialize(request.Places)}");
-            return Ok(response);
+            try
+            {
+                var accountId = await _accountsApplication.CreateAsync(request);
+
+                return Created(string.Empty, new
+                {
+                    accountId,
+                    message = "Conta criada com sucesso"
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    error = ex.Message
+                });
+            }
         }
+
 
         /// <summary>
         /// Realiza uma transferência bancária a partir de uma conta de origem.

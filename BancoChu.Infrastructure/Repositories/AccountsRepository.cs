@@ -1,4 +1,5 @@
 ﻿using BancoChu.Domain.Entities;
+using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 using Dapper;
 using System.Data;
@@ -12,6 +13,24 @@ namespace BancoChu.Infrastructure.Repositories
         public AccountsRepository(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
+        }
+        public async Task<bool> ExistsByUserAndTypeAsync(Guid userId, AccountType type)
+        {
+            const string sql = @"
+                             SELECT 1
+                              FROM bank_accounts
+                               WHERE user_id = @userId
+                             AND type = @type
+                             LIMIT 1;";
+
+            using var connection = _connectionFactory.CreateConnection();
+
+            var exists = await connection.QueryFirstOrDefaultAsync<int?>(
+                sql,
+                new { userId, type }
+            );
+
+            return exists.HasValue;
         }
 
         public async Task AddAsync(BankAccount account)
@@ -86,7 +105,7 @@ namespace BancoChu.Infrastructure.Repositories
                 {
                     AccountId = accountId,
                     Balance = newBalance
-                }, 
+                },
                 transaction
             );
             if (rows == 0)
