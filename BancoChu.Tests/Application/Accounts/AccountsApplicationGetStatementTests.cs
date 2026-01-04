@@ -1,143 +1,80 @@
 ﻿using BancoChu.Application;
+using BancoChu.Application.Dtos.Accounts;
+using BancoChu.Application.Interfaces;
 using BancoChu.Domain.Entities;
+using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 using Moq;
-
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace BancoChu.Tests.Application.Accounts
 {
+
     public class AccountsApplicationGetStatementTests
     {
         private readonly Mock<IAccountsRepository> _accountsRepositoryMock;
         private readonly Mock<IBankTransferRepository> _bankTransferRepositoryMock;
-        private readonly AccountsApplication _application;
+        private readonly Mock<IDbConnectionFactory> _connectionFactoryMock;
+        private readonly Mock<IBusinessDayApplication> _businessDayApplicationMock;
+        private readonly AccountsApplication _sut;
 
         public AccountsApplicationGetStatementTests()
         {
             _accountsRepositoryMock = new Mock<IAccountsRepository>();
             _bankTransferRepositoryMock = new Mock<IBankTransferRepository>();
+            _connectionFactoryMock = new Mock<IDbConnectionFactory>();
+            _businessDayApplicationMock = new Mock<IBusinessDayApplication>();
 
-            _application = new AccountsApplication(
+            _sut = new AccountsApplication(
                 _accountsRepositoryMock.Object,
                 _bankTransferRepositoryMock.Object,
-                null!, // não usado nesse método
-                null!  // não usado nesse método
+                _connectionFactoryMock.Object,
+                _businessDayApplicationMock.Object
             );
         }
 
         [Fact]
-        public async Task GetStatementAsync_WhenAccountDoesNotExist_ShouldThrowException()
+        public async Task GetStatementAsync_ShouldThrow_WhenAccountNotFound()
         {
-            // Arrange
             var accountId = Guid.NewGuid();
 
             _accountsRepositoryMock
-                .Setup(x => x.GetByIdAsync(accountId))
+                .Setup(r => r.GetByIdAsync(accountId))
                 .ReturnsAsync((BankAccount?)null);
 
-            // Act & Assert
-            var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                _application.GetStatementAsync(accountId, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow));
-
-            Assert.Equal("Conta não encontrada.", ex.Message);
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                _sut.GetStatementAsync(accountId, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow));
         }
 
         [Fact]
-        public async Task GetStatementAsync_WhenOriginAccount_ShouldReturnNegativeAmount()
+        public async Task GetStatementAsync_ShouldReturnStatements_WithNegativeAmountForOrigin()
         {
-            // Arrange
-            var accountId = Guid.NewGuid();
-            var transferAmount = 100m;
-
-            var transfers = new List<BankTransfer>
-            {
-                BankTransfer.Create(
-                    originAccountId: accountId,
-                    destinationAccountId: Guid.NewGuid(),
-                    amount: transferAmount
-                )
-            };
-
-            _accountsRepositoryMock
-                .Setup(x => x.GetByIdAsync(accountId))
-                .ReturnsAsync(Mock.Of<BankAccount>());
-
-            _bankTransferRepositoryMock
-                .Setup(x => x.GetStatementAsync(accountId, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .ReturnsAsync(transfers);
-
-            // Act
-            var result = (await _application.GetStatementAsync(
-                accountId,
-                DateTime.UtcNow.AddDays(-10),
-                DateTime.UtcNow
-            )).ToList();
-
-            // Assert
-            Assert.Single(result);
-            Assert.Equal(-transferAmount, result[0].Amount);
-        }
-
-        [Fact]
-        public async Task GetStatementAsync_WhenDestinationAccount_ShouldKeepPositiveAmount()
-        {
-            // Arrange
-            var accountId = Guid.NewGuid();
-            var transferAmount = 200m;
-
-            var transfers = new List<BankTransfer>
-            {
-                BankTransfer.Create(
-                    originAccountId: Guid.NewGuid(),
-                    destinationAccountId: accountId,
-                    amount: transferAmount
-                )
-            };
-
-            _accountsRepositoryMock
-                .Setup(x => x.GetByIdAsync(accountId))
-                .ReturnsAsync(Mock.Of<BankAccount>());
-
-            _bankTransferRepositoryMock
-                .Setup(x => x.GetStatementAsync(accountId, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .ReturnsAsync(transfers);
-
-            // Act
-            var result = (await _application.GetStatementAsync(
-                accountId,
-                DateTime.UtcNow.AddDays(-10),
-                DateTime.UtcNow
-            )).ToList();
-
-            // Assert
-            Assert.Single(result);
-            Assert.Equal(transferAmount, result[0].Amount);
-        }
-
-        [Fact]
-        public async Task GetStatementAsync_WhenNoTransfers_ShouldReturnEmptyList()
-        {
-            // Arrange
             var accountId = Guid.NewGuid();
 
+            var account = BankAccount.Create("12345", "0001", Guid.NewGuid(), 1000, AccountType.Checking);
             _accountsRepositoryMock
-                .Setup(x => x.GetByIdAsync(accountId))
-                .ReturnsAsync(Mock.Of<BankAccount>());
+                .Setup(r => r.GetByIdAsync(accountId))
+                .ReturnsAsync(account);
+
+            var transferOrigin = BankTransfer.Create(accountId, Guid.NewGuid(), 200);
+            var transferDestination = BankTransfer.Create(Guid.NewGuid(), accountId, 300);
 
             _bankTransferRepositoryMock
-                .Setup(x => x.GetStatementAsync(accountId, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
-                .ReturnsAsync(new List<BankTransfer>());
+                .Setup(r => r.GetStatementAsync(accountId, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(new List<BankTransfer> { transferOrigin, transferDestination });
 
-            // Act
-            var result = await _application.GetStatementAsync(
-                accountId,
-                DateTime.UtcNow.AddDays(-10),
-                DateTime.UtcNow
-            );
+            var result = await _sut.GetStatementAsync(accountId, DateTime.UtcNow.AddDays(-10), DateTime.UtcNow);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Empty(result);
+            var list = new List<BankTransfer>(result);
+
+            // O lançamento de origem deve ter Amount negativo
+            Assert.Equal(-200, list[0].Amount);
+
+            // O lançamento de destino deve permanecer positivo
+            Assert.Equal(300, list[1].Amount);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BancoChu.Application.Dtos;
 using BancoChu.Application.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
+using System.Text;
 using System.Text.Json;
 
 namespace BancoChu.Application
@@ -10,11 +11,14 @@ namespace BancoChu.Application
         private readonly IBrasilApiService _brasilApiService;
         private readonly IDistributedCache _cache;
 
-        public BusinessDayApplication(IBrasilApiService brasilApiService, IDistributedCache cache)
+        public BusinessDayApplication(
+            IBrasilApiService brasilApiService,
+            IDistributedCache cache)
         {
             _brasilApiService = brasilApiService;
             _cache = cache;
         }
+
         public async Task<bool> IsBusinessDayAsync(DateTime date)
         {
             if (date.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
@@ -22,20 +26,21 @@ namespace BancoChu.Application
 
             var holidays = await GetHolidaysByYearAsync(date.Year);
 
-            var isHoliday = holidays.Any(h => h.Date.Date == date.Date);
+            var isholidays = holidays.Any(h => h.Date.Date == date.Date);
 
-            return !isHoliday;
+            return !isholidays;
         }
 
         private async Task<List<HolidayDto>> GetHolidaysByYearAsync(int year)
         {
             var cacheKey = $"holidays:{year}";
 
-            var cached = await _cache.GetStringAsync(cacheKey);
+            var cachedBytes = await _cache.GetAsync(cacheKey);
 
-            if (!string.IsNullOrEmpty(cached))
+            if (cachedBytes != null)
             {
-                return JsonSerializer.Deserialize<List<HolidayDto>>(cached)!;
+                var json = Encoding.UTF8.GetString(cachedBytes);
+                return JsonSerializer.Deserialize<List<HolidayDto>>(json)!;
             }
 
             var holidays = await _brasilApiService.GetHolidayAsync(year);
@@ -45,7 +50,11 @@ namespace BancoChu.Application
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
             };
 
-            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(holidays), options);
+            await _cache.SetAsync(
+                cacheKey,
+                Encoding.UTF8.GetBytes(JsonSerializer.Serialize(holidays)),
+                options
+            );
 
             return holidays;
         }

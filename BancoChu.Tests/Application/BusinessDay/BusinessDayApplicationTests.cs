@@ -3,85 +3,110 @@ using BancoChu.Application.Dtos;
 using BancoChu.Application.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace BancoChu.Tests.Application.BusinessDay
 {
     public class BusinessDayApplicationTests
     {
-        private readonly Mock<IBrasilApiService> _brasilApiMock;
+        private readonly Mock<IBrasilApiService> _brasilApiServiceMock;
         private readonly Mock<IDistributedCache> _cacheMock;
-        private readonly BusinessDayApplication _application;
+        private readonly BusinessDayApplication _sut; // System Under Test
 
         public BusinessDayApplicationTests()
         {
-            _brasilApiMock = new Mock<IBrasilApiService>();
+            _brasilApiServiceMock = new Mock<IBrasilApiService>();
             _cacheMock = new Mock<IDistributedCache>();
-
-            _application = new BusinessDayApplication(
-                _brasilApiMock.Object,
-                _cacheMock.Object
-            );
+            _sut = new BusinessDayApplication(_brasilApiServiceMock.Object, _cacheMock.Object);
         }
 
         [Fact]
-        public async Task IsBusinessDayAsync_WhenSaturday_ShouldReturnFalse()
+        public async Task IsBusinessDayAsync_ShouldReturnFalse_WhenSaturday()
         {
-            // Arrange
-            var saturday = new DateTime(2025, 1, 4); // sábado
+            var saturday = new DateTime(2026, 1, 3); // sábado
+            var result = await _sut.IsBusinessDayAsync(saturday);
 
-            // Act
-            var result = await _application.IsBusinessDayAsync(saturday);
-
-            // Assert
             Assert.False(result);
         }
 
+        [Fact]
+        public async Task IsBusinessDayAsync_ShouldReturnFalse_WhenSunday()
+        {
+            var sunday = new DateTime(2026, 1, 4); // domingo
+            var result = await _sut.IsBusinessDayAsync(sunday);
+
+            Assert.False(result);
+        }
 
         [Fact]
-        public async Task IsBusinessDayAsync_WhenHoliday_ShouldReturnFalse()
+        public async Task IsBusinessDayAsync_ShouldReturnFalse_WhenHoliday()
         {
-            // Arrange
-            var date = new DateTime(2025, 1, 1);
+            var holiday = new DateTime(2026, 1, 1); // Confraternização mundial
 
+            // Cache deve retornar null para cair na chamada da API
             _cacheMock
-                .Setup(c => c.GetStringAsync("holidays:2025", It.IsAny<CancellationToken>()))
-                .ReturnsAsync((string?)null);
+                .Setup(c => c.GetAsync(It.IsAny<string>(), default))
+                .ReturnsAsync((byte[]?)null);
 
-            _brasilApiMock
-                .Setup(b => b.GetHolidayAsync(2025))
+            _brasilApiServiceMock
+                .Setup(s => s.GetHolidayAsync(2026))
                 .ReturnsAsync(new List<HolidayDto>
                 {
-            new HolidayDto { Date = date }
+            new HolidayDto { Date = holiday, Name = "Confraternização mundial", Type = "national" }
                 });
 
-            // Act
-            var result = await _application.IsBusinessDayAsync(date);
+            var result = await _sut.IsBusinessDayAsync(holiday);
 
-            // Assert
             Assert.False(result);
         }
 
+
         [Fact]
-        public async Task IsBusinessDayAsync_WhenCacheExists_ShouldNotCallApi()
+        public async Task IsBusinessDayAsync_ShouldReturnTrue_WhenNormalBusinessDay()
         {
-            // Arrange
-            var date = new DateTime(2025, 1, 2);
+            var normalDay = new DateTime(2026, 1, 2); // sexta-feira
 
-            var cachedHolidays = JsonSerializer.Serialize(new List<HolidayDto>());
-
+            // Cache deve retornar null para cair na chamada da API
             _cacheMock
-                .Setup(c => c.GetStringAsync("holidays:2025", It.IsAny<CancellationToken>()))
-                .ReturnsAsync(cachedHolidays);
+                .Setup(c => c.GetAsync(It.IsAny<string>(), default))
+                .ReturnsAsync((byte[]?)null);
 
-            // Act
-            var result = await _application.IsBusinessDayAsync(date);
+            _brasilApiServiceMock
+                .Setup(s => s.GetHolidayAsync(2026))
+                .ReturnsAsync(new List<HolidayDto>()); // sem feriados
 
-            // Assert
+            var result = await _sut.IsBusinessDayAsync(normalDay);
+
             Assert.True(result);
-            _brasilApiMock.Verify(b => b.GetHolidayAsync(It.IsAny<int>()), Times.Never);
         }
 
 
+        [Fact]
+        public async Task GetHolidaysByYearAsync_ShouldUseCache_WhenAvailable()
+        {
+            var year = 2026;
+            var cacheKey = $"holidays:{year}";
+            var holidays = new List<HolidayDto>
+            {
+                new HolidayDto { Date = new DateTime(2026, 1, 1), Name = "Confraternização mundial", Type = "national" }
+            };
+
+            var cachedJson = JsonSerializer.Serialize(holidays);
+            var cachedBytes = Encoding.UTF8.GetBytes(cachedJson);
+
+            _cacheMock
+                .Setup(c => c.GetAsync(cacheKey, default))
+                .ReturnsAsync(cachedBytes);
+
+            var result = await _sut.IsBusinessDayAsync(new DateTime(2026, 1, 1));
+
+            Assert.False(result); // porque é feriado
+            _brasilApiServiceMock.Verify(s => s.GetHolidayAsync(It.IsAny<int>()), Times.Never);
+        }
     }
 }
