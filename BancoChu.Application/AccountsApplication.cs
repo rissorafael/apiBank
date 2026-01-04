@@ -106,8 +106,12 @@ namespace BancoChu.Application
 
         public async Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid accountId, DateTime startDate, DateTime endDate)
         {
-            var statements = await _bankTransferRepository.GetStatementAsync(accountId, startDate, endDate);
+            var account = await _accountsRepository.GetByIdAsync(accountId);
+            if (account == null)
+                throw new InvalidOperationException("Conta não encontrada.");
 
+            var statements = await _bankTransferRepository.GetStatementAsync(accountId, startDate, endDate);
+           
 
             foreach (var item in statements)
             {

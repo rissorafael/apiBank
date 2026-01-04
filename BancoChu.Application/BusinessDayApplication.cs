@@ -22,9 +22,7 @@ namespace BancoChu.Application
 
             var holidays = await GetHolidaysByYearAsync(date.Year);
 
-            var isHoliday = holidays.Any(h =>
-                h.Date.Date == date.Date
-            );
+            var isHoliday = holidays.Any(h => h.Date.Date == date.Date);
 
             return !isHoliday;
         }
@@ -47,11 +45,7 @@ namespace BancoChu.Application
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
             };
 
-            await _cache.SetStringAsync(
-                cacheKey,
-                JsonSerializer.Serialize(holidays),
-                options
-            );
+            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(holidays), options);
 
             return holidays;
         }

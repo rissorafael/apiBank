@@ -9,5 +9,8 @@
     <Project Path="BancoChu.Infra.IoC/BancoChu.Infra.IoC.csproj" />
     <Project Path="BancoChu.Infrastructure/BancoChu.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/Test/">
+    <Project Path="BancoChu.Tests/BancoChu.Tests.csproj" Id="de597b76-a9a1-46f0-bf6e-f863714ba58b" />
+  </Folder>
   <Project Path="BancoChuApi/BancoChuApi.csproj" />
 </Solution>

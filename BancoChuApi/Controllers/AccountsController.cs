@@ -164,11 +164,16 @@ namespace BancoChuApi.Controllers
             var start = startDate.Date;
             var end = endDate.Date.AddDays(1);
 
+            try
+            {
+                var statement = await _accountsApplication.GetStatementAsync(accountId, start, end);
+                return Ok(statement);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
 
-            var statement = await _accountsApplication.GetStatementAsync(accountId, start, end);
-            return Ok(statement);
         }
-
     }
 }
-
