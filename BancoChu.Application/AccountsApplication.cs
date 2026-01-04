@@ -110,8 +110,11 @@ namespace BancoChu.Application
             if (account == null)
                 throw new InvalidOperationException("Conta não encontrada.");
 
-            var statements = await _bankTransferRepository.GetStatementAsync(accountId, startDate, endDate);
-           
+            var start = startDate.Date;
+            var end = endDate.Date.AddDays(1);
+
+            var statements = await _bankTransferRepository.GetStatementAsync(accountId, start, end);
+
 
             foreach (var item in statements)
             {

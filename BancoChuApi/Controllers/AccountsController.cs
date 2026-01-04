@@ -160,10 +160,6 @@ namespace BancoChuApi.Controllers
         {
             if (startDate > endDate)
                 return BadRequest("A data inicial não pode ser maior que a data final.");
-
-            var start = startDate.Date;
-            var end = endDate.Date.AddDays(1);
-
             try
             {
                 var statement = await _accountsApplication.GetStatementAsync(accountId, start, end);

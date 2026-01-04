@@ -81,7 +81,7 @@ namespace BancoChu.Infrastructure.Repositories
                            (origin_account_id = @AccountId
                             OR destination_account_id = @AccountId)
                          AND transfer_date >= @StartDate
-                         AND transfer_date <= @EndDate
+                         AND transfer_date < @EndDate
                        ORDER BY transfer_date ASC;";
 
 
