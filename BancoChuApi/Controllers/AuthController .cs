@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BancoChuApi.Controllers
 {
-    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
@@ -38,16 +37,23 @@ namespace BancoChuApi.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto request)
         {
-            var result = await _authApplication.LoginAsync(request);
-           
-            if (result is null)
+            try
+            {
+                var result = await _authApplication.LoginAsync(request);
+
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
                 return Unauthorized(new ProblemDetails
                 {
                     Title = "Credenciais inválidas",
+                    Detail = ex.Message,
                     Status = StatusCodes.Status401Unauthorized
                 });
-
-            return Ok(result);
+            }
         }
+
     }
 }
+

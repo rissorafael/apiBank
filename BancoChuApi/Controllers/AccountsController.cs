@@ -162,7 +162,7 @@ namespace BancoChuApi.Controllers
                 return BadRequest("A data inicial não pode ser maior que a data final.");
             try
             {
-                var statement = await _accountsApplication.GetStatementAsync(accountId, start, end);
+                var statement = await _accountsApplication.GetStatementAsync(accountId, startDate, endDate);
                 return Ok(statement);
             }
             catch (InvalidOperationException ex)
