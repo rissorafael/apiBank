@@ -41,6 +41,9 @@ namespace BancoChuApi.Controllers
         public async Task<IActionResult> CreateAsync([FromBody] CreateUserRequestDto request)
         {
             var user = await _usersApplication.CreateAsync(request);
+            if (user is null)
+                return Conflict(new { message = "Email já cadastrado." });
+
             return Ok(user);
         }
     }

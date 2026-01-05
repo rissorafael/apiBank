@@ -7,9 +7,7 @@ namespace BancoChu.Application.Interfaces
     public interface IAccountsApplication
     {
         Task<Guid> CreateAsync(CreateAccountsRequestDto dto);
-        Task<Guid> TransferAsync(Guid accountId, TransferRequestDto request);
-        Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid accountId, DateTime startDate, DateTime endDate);
-            //Task TransferAsync(TransferCommand command);
-        //Task<AccountStatementDto> GetStatementAsync(GetStatementQuery query);
+        Task<Guid> TransferAsync(Guid userId, Guid accountId, TransferRequestDto request);
+        Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid userId, Guid accountId, DateTime startDate, DateTime endDate);
     }
 }

@@ -17,6 +17,11 @@ namespace BancoChu.Application
 
         public async Task<UserResponseDto> CreateAsync(CreateUserRequestDto dto)
         {
+            var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+            if (existingUser is not null)
+                return null; 
+
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -34,5 +39,6 @@ namespace BancoChu.Application
                 Status = user.Status
             };
         }
+
     }
 }

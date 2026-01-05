@@ -5,6 +5,7 @@ using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 
 
+
 namespace BancoChu.Application
 {
     public class AccountsApplication : IAccountsApplication
@@ -43,7 +44,7 @@ namespace BancoChu.Application
             return account.Id;
         }
 
-        public async Task<Guid> TransferAsync(Guid accountId, TransferRequestDto dto)
+        public async Task<Guid> TransferAsync(Guid userId, Guid accountId, TransferRequestDto dto)
         {
 
             var today = DateTime.UtcNow.Date;
@@ -58,6 +59,9 @@ namespace BancoChu.Application
 
             var originAccount = await _accountsRepository.GetByIdAsync(accountId) ??
                 throw new InvalidOperationException("Conta de origem não encontrada.");
+
+            if (originAccount.UserId != userId)
+                throw new InvalidOperationException("A conta de origem não pertence ao usuário logado.");
 
             var destinationAccount = await _accountsRepository.GetByIdAsync(dto.DestinationAccountId) ??
                 throw new InvalidOperationException("Conta de destino não encontrada.");
@@ -104,11 +108,15 @@ namespace BancoChu.Application
             }
         }
 
-        public async Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid accountId, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid userId, Guid accountId, DateTime startDate, DateTime endDate)
         {
             var account = await _accountsRepository.GetByIdAsync(accountId);
+
             if (account == null)
                 throw new InvalidOperationException("Conta não encontrada.");
+
+            if (account.UserId != userId)
+                throw new InvalidOperationException("Conta não pertence ao usuário.");
 
             var start = startDate.Date;
             var end = endDate.Date.AddDays(1);

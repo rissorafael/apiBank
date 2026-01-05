@@ -2,6 +2,7 @@
 using BancoChu.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BancoChuApi.Controllers
 {
@@ -89,7 +90,9 @@ namespace BancoChuApi.Controllers
         {
             try
             {
-                var transferId = await _accountsApplication.TransferAsync(accountId, request);
+                var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+                var transferId = await _accountsApplication.TransferAsync(userId, accountId, request);
 
                 return Created(string.Empty, new
                 {
@@ -128,9 +131,11 @@ namespace BancoChuApi.Controllers
         /// </param>
         /// <param name="startDate">
         /// Data inicial do período do extrato (inclusive).
+        /// Formato esperado: <c>yyyy/MM/dd</c>
         /// </param>
         /// <param name="endDate">
         /// Data final do período do extrato (inclusive).
+        /// Formato esperado: <c>yyyy/MM/dd</c>
         /// </param>
         /// <returns>
         /// Retorna a lista de movimentações (créditos e débitos) da conta no período informado.
@@ -139,7 +144,7 @@ namespace BancoChuApi.Controllers
         /// Extrato retornado com sucesso.
         /// </response>
         /// <response code="400">
-        /// A data inicial é maior que a data final.
+        /// A data inicial é maior que a data final ou o formato da data é inválido.
         /// </response>
         /// <response code="404">
         /// Conta não encontrada.
@@ -154,15 +159,18 @@ namespace BancoChuApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetStatementAsync([FromRoute] Guid accountId,
-                                                           [FromQuery] DateTime startDate,
-                                                           [FromQuery] DateTime endDate)
+                                                    [FromQuery] DateTime startDate,
+                                                    [FromQuery] DateTime endDate)
 
         {
             if (startDate > endDate)
                 return BadRequest("A data inicial não pode ser maior que a data final.");
+
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
             try
             {
-                var statement = await _accountsApplication.GetStatementAsync(accountId, startDate, endDate);
+                var statement = await _accountsApplication.GetStatementAsync(userId, accountId, startDate, endDate);
                 return Ok(statement);
             }
             catch (InvalidOperationException ex)

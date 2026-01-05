@@ -79,7 +79,8 @@ namespace BancoChu.Infrastructure.Repositories
                           SELECT
                               id,
                               balance,
-                              status
+                              status,
+                              user_id as UserId
                           FROM bank_accounts
                           WHERE id = @accountId;";
 
