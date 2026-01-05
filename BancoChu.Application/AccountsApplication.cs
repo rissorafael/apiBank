@@ -5,7 +5,6 @@ using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 
 
-
 namespace BancoChu.Application
 {
     public class AccountsApplication : IAccountsApplication
@@ -21,14 +20,28 @@ namespace BancoChu.Application
             _connectionFactory = connectionFactory;
             _businessDayApplication = businessDayApplication;
         }
+
+        public async Task<decimal> GetBalanceAsync(Guid userId, Guid accountId)
+        {
+            var account = await _accountsRepository.GetByIdAsync(accountId);
+
+            if (account is null)
+                throw new KeyNotFoundException("Conta não encontrada");
+
+            if (account.UserId != userId)
+                throw new InvalidOperationException("A conta de origem não pertence ao usuário logado.");
+
+            return account.Balance;
+        }
+
+
         public async Task<Guid> CreateAsync(CreateAccountsRequestDto dto)
         {
 
             var alreadyExists = await _accountsRepository.ExistsByUserAndTypeAsync(dto.UserId, dto.Type);
             if (alreadyExists)
             {
-                throw new ArgumentException(
-                    $"O usuário já possui uma conta do tipo {dto.Type}.");
+                throw new ArgumentException($"O usuário já possui uma conta do tipo {dto.Type}.");
             }
 
             var account = BankAccount.Create(
@@ -58,16 +71,16 @@ namespace BancoChu.Application
                 throw new ArgumentException("Conta de origem e destino não podem ser iguais.");
 
             var originAccount = await _accountsRepository.GetByIdAsync(accountId) ??
-                throw new InvalidOperationException("Conta de origem não encontrada.");
+                throw new KeyNotFoundException("Conta de origem não encontrada.");
 
             if (originAccount.UserId != userId)
                 throw new InvalidOperationException("A conta de origem não pertence ao usuário logado.");
 
             var destinationAccount = await _accountsRepository.GetByIdAsync(dto.DestinationAccountId) ??
-                throw new InvalidOperationException("Conta de destino não encontrada.");
+                throw new KeyNotFoundException("Conta de destino não encontrada.");
 
             if (originAccount.Status != AccountStatus.Active)
-                throw new InvalidOperationException("Conta de origem não está ativa.");
+                throw new KeyNotFoundException("Conta de origem não está ativa.");
 
             if (originAccount.Balance < dto.Amount)
                 throw new InvalidOperationException("Saldo insuficiente.");

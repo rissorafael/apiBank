@@ -224,6 +224,20 @@ Base route: `api/v{version:apiVersion}/users`
 
 ## 📚 Endpoints Disponíveis – AccountsController
 
+### 🔹 Consultar Saldo da Conta
+
+**GET** `api/v{version}/accounts/{accountId}/balance`
+
+- Consulta o saldo atual de uma conta bancária
+- O usuário deve estar autenticado
+- O saldo só pode ser consultado pelo dono da conta
+- O userId é obtido automaticamente a partir do token JWT
+
+**Respostas:**
+- `200 OK`
+- `400 Bad Request`
+- `500 Internal Server Error`
+
 ### 🔹 Criar Conta
 
 **POST** `api/v{version}/accounts`

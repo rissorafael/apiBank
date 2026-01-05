@@ -18,6 +18,44 @@ namespace BancoChuApi.Controllers
             _accountsApplication = accountsApplication;
         }
 
+        /// <summary>
+        /// Consulta o saldo de uma conta bancária.
+        /// </summary>
+        /// <param name="accountId">Id da conta bancária</param>
+        /// <returns>Saldo atual da conta</returns>
+        /// <response code="200">Saldo retornado com sucesso</response>
+        /// <response code="404">Conta não encontrada</response>
+        [Authorize]
+        [HttpGet("{accountId}/balance")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetBalanceAsync(Guid accountId)
+        {
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            try
+            {
+                var balance = await _accountsApplication.GetBalanceAsync(userId, accountId);
+
+                return Ok(balance);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new
+                {
+                    error = ex.Message
+                });
+            }
+
+        }
+
 
         /// <summary>
         /// Cria uma nova conta bancária.
@@ -99,6 +137,10 @@ namespace BancoChuApi.Controllers
                     transferId,
                     message = "Transferência realizada com sucesso"
                 });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
             }
             catch (ArgumentException ex)
             {

@@ -77,10 +77,14 @@ namespace BancoChu.Infrastructure.Repositories
         {
             const string sql = @"
                           SELECT
-                              id,
-                              balance,
-                              status,
-                              user_id as UserId
+                              id as Id,
+                              account_number as AccountNumber,
+                              agency as Agency,
+                              user_id as UserId,
+                              balance as Balance,
+                              status as Status,
+                              type as Type,
+                              created_at as CreatedAt
                           FROM bank_accounts
                           WHERE id = @accountId;";
 

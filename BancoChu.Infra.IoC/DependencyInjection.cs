@@ -3,6 +3,7 @@ using BancoChu.Application;
 using BancoChu.Application.Interfaces;
 using BancoChu.Domain.Interfaces;
 using BancoChu.Infrastructure.Connection;
+using BancoChu.Infrastructure.Resilience;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,9 @@ namespace BancoChu.Infra.IoC
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IBrasilApiService, BrasilApiService>();
+
+            services.AddHttpClient<IBrasilApiService, BrasilApiService>()
+                    .AddPolicyHandler(ResiliencePolicies.GetDefaultHttpPolicy());
             services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             services.AddScoped<IAccountsApplication, AccountsApplication>();
             services.AddScoped<IAccountsRepository, Infrastructure.Repositories.AccountsRepository>();

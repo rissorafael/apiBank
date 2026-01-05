@@ -9,5 +9,6 @@ namespace BancoChu.Application.Interfaces
         Task<Guid> CreateAsync(CreateAccountsRequestDto dto);
         Task<Guid> TransferAsync(Guid userId, Guid accountId, TransferRequestDto request);
         Task<IEnumerable<BankTransfer>> GetStatementAsync(Guid userId, Guid accountId, DateTime startDate, DateTime endDate);
+        Task<decimal> GetBalanceAsync(Guid userId, Guid accountId);
     }
 }
