@@ -99,7 +99,7 @@ namespace BancoChu.Tests.Application.Accounts
                 await _application.TransferAsync(Guid.NewGuid(), Guid.NewGuid(), request);
 
             await act.Should()
-                .ThrowAsync<InvalidOperationException>()
+                .ThrowAsync<KeyNotFoundException>()
                 .WithMessage("Conta de origem não encontrada.");
         }
 
