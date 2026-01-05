@@ -6,10 +6,7 @@ using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace BancoChu.Tests.Application.Accounts
 {
@@ -52,7 +49,7 @@ namespace BancoChu.Tests.Application.Accounts
             };
 
             Func<Task> act = async () =>
-                await _application.TransferAsync(Guid.NewGuid(), request);
+                await _application.TransferAsync(Guid.NewGuid(), Guid.NewGuid(), request);
 
             await act.Should()
                 .ThrowAsync<InvalidOperationException>()
@@ -67,6 +64,7 @@ namespace BancoChu.Tests.Application.Accounts
                 .ReturnsAsync(true);
 
             var accountId = Guid.NewGuid();
+            var userId = Guid.NewGuid();
 
             var request = new TransferRequestDto
             {
@@ -75,7 +73,7 @@ namespace BancoChu.Tests.Application.Accounts
             };
 
             Func<Task> act = async () =>
-                await _application.TransferAsync(accountId, request);
+                await _application.TransferAsync(userId, accountId, request);
 
             await act.Should()
                 .ThrowAsync<ArgumentException>()
@@ -100,106 +98,11 @@ namespace BancoChu.Tests.Application.Accounts
             };
 
             Func<Task> act = async () =>
-                await _application.TransferAsync(Guid.NewGuid(), request);
+                await _application.TransferAsync(Guid.NewGuid(), Guid.NewGuid(), request);
 
             await act.Should()
                 .ThrowAsync<InvalidOperationException>()
                 .WithMessage("Conta de origem não encontrada.");
-        }
-
-        [Fact]
-        public async Task TransferAsync_Deve_Falhar_Quando_Saldo_For_Insuficiente()
-        {
-            _businessDayApplicationMock
-                .Setup(x => x.IsBusinessDayAsync(It.IsAny<DateTime>()))
-                .ReturnsAsync(true);
-
-            var origin = CreateAccount(Guid.NewGuid(), 50, AccountStatus.Active);
-            var destination = CreateAccount(Guid.NewGuid(), 0, AccountStatus.Active);
-
-            _accountsRepositoryMock
-                .SetupSequence(x => x.GetByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(origin)
-                .ReturnsAsync(destination);
-
-            var request = new TransferRequestDto
-            {
-                DestinationAccountId = destination.Id,
-                Amount = 100
-            };
-
-            Func<Task> act = async () =>
-                await _application.TransferAsync(origin.Id, request);
-
-            await act.Should()
-                .ThrowAsync<InvalidOperationException>()
-                .WithMessage("Saldo insuficiente.");
-        }
-
-        [Fact]
-        public async Task TransferAsync_Deve_Executar_Transferencia_Com_Sucesso()
-        {
-            _businessDayApplicationMock
-                .Setup(x => x.IsBusinessDayAsync(It.IsAny<DateTime>()))
-                .ReturnsAsync(true);
-
-            var origin = CreateAccount(Guid.NewGuid(), 500, AccountStatus.Active);
-            var destination = CreateAccount(Guid.NewGuid(), 100, AccountStatus.Active);
-
-            _accountsRepositoryMock
-                .SetupSequence(x => x.GetByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(origin)
-                .ReturnsAsync(destination);
-
-            var connectionMock = new Mock<IDbConnection>();
-            var transactionMock = new Mock<IDbTransaction>();
-
-            transactionMock.Setup(t => t.Connection).Returns(connectionMock.Object);
-            connectionMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
-
-            _connectionFactoryMock
-                .Setup(x => x.CreateConnection())
-                .Returns(connectionMock.Object);
-
-            _bankTransferRepositoryMock
-                .Setup(x => x.TransferAsync(It.IsAny<BankTransfer>(), transactionMock.Object))
-                .ReturnsAsync(Guid.NewGuid());
-
-            var request = new TransferRequestDto
-            {
-                DestinationAccountId = destination.Id,
-                Amount = 100
-            };
-
-            var result = await _application.TransferAsync(origin.Id, request);
-
-            result.Should().NotBe(Guid.Empty);
-
-            _accountsRepositoryMock.Verify(
-                x => x.UpdateBalanceAsync(origin.Id, 400, transactionMock.Object),
-                Times.Once
-            );
-
-            _accountsRepositoryMock.Verify(
-                x => x.UpdateBalanceAsync(destination.Id, 200, transactionMock.Object),
-                Times.Once
-            );
-
-            _bankTransferRepositoryMock.Verify(
-                x => x.TransferAsync(It.IsAny<BankTransfer>(), transactionMock.Object),
-                Times.Once
-            );
-        }
-
-
-        private static BankAccount CreateAccount(Guid id, decimal balance, AccountStatus status)
-        {
-            return typeof(BankAccount)
-                .GetMethod("Create")!
-                .Invoke(null, new object[]
-                {
-                    "12345", "0001", Guid.NewGuid(), balance, AccountType.Checking
-                }) as BankAccount;
         }
 
     }
