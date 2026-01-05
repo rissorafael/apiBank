@@ -244,6 +244,7 @@ Base route: `api/v{version:apiVersion}/users`
 
 - Executa transferência entre contas
 - Apenas em dias úteis
+- Apenas transferencia do usuario logado
 - Usa transação manual (commit/rollback)
 
 **Respostas:**
@@ -259,6 +260,7 @@ Base route: `api/v{version:apiVersion}/users`
 
 - Retorna extrato no período
 - Débitos retornam como valores negativos
+- Apenas extrato do usuario logado
 
 **Respostas:**
 - `200 OK`
