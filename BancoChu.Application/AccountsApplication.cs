@@ -116,7 +116,7 @@ namespace BancoChu.Application
                 throw new InvalidOperationException("Conta não encontrada.");
 
             if (account.UserId != userId)
-                throw new InvalidOperationException("Conta não pertence ao usuário.");
+                throw new InvalidOperationException("A conta não pertence ao usuário logado.");
 
             var start = startDate.Date;
             var end = endDate.Date.AddDays(1);
