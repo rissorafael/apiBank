@@ -17,7 +17,7 @@ namespace BancoChu.Infrastructure.Resilience
                 .HandleTransientHttpError()
                 .WaitAndRetryAsync(
                     retryCount: 3,
-                    sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt))
+                    sleepDurationProvider: _ => TimeSpan.FromSeconds(10)
                 );
         }
 
