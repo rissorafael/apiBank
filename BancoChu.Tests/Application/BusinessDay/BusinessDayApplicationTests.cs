@@ -3,12 +3,8 @@ using BancoChu.Application.Dtos;
 using BancoChu.Application.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace BancoChu.Tests.Application.BusinessDay
 {

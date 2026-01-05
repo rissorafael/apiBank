@@ -1,9 +1,6 @@
 ﻿using BancoChu.Application.Dtos.Accounts;
 using BancoChu.Domain.Enums;
 using FluentValidation.TestHelper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BancoChu.Tests.Application.Accounts
 {

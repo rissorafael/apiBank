@@ -163,8 +163,13 @@ namespace BancoChuApi.Controllers
                                                     [FromQuery] DateTime endDate)
 
         {
-            if (startDate > endDate)
-                return BadRequest("A data inicial não pode ser maior que a data final.");
+
+            var query = new GetStatementRequestDto
+            {
+                AccountId = accountId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
 
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 

@@ -6,9 +6,6 @@ using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BancoChu.Tests.Application.Accounts
 {

@@ -2,11 +2,9 @@
 using BancoChu.Application.Dtos.Accounts;
 using BancoChu.Application.Interfaces;
 using BancoChu.Domain.Entities;
-using BancoChu.Domain.Enums;
 using BancoChu.Domain.Interfaces;
 using FluentAssertions;
 using Moq;
-using System.Data;
 
 namespace BancoChu.Tests.Application.Accounts
 {
