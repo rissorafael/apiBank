@@ -98,9 +98,7 @@ namespace BancoChu.Infrastructure.Repositories
                                     SET balance = @Balance  
                                     WHERE id = @AccountId;";
 
-            using var connection = _connectionFactory.CreateConnection();
-
-            var rows = await connection.ExecuteAsync(
+            var rows = await transaction.Connection.ExecuteAsync(
                 sql,
                 new
                 {
